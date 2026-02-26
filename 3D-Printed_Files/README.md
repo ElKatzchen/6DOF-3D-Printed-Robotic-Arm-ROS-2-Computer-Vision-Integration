@@ -51,3 +51,4 @@ For best results and mechanical strength, the following settings are suggested:
     
 ---
 
+**Next Step:** Once printed, proceed to the [**Inverse Kinematics**](../Inverse_Kinematics_Codes) folder for assembly and motor calibration instructions.

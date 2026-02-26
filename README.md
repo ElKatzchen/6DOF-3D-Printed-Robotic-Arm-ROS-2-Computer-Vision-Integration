@@ -39,6 +39,7 @@ To run the hand-tracking and coordinate transformation nodes, you will need:
 
 The repository is organized into several folders:
 * `/3D-Printed_Files`: Includes STL files for printing and SolidWorks 2025 source files.
+* `/Inverse_Kinematics_Codes`: Includes all necesary codes for the inverse kinematics programming.
 * `/REDACTED`: The ROS 2 workspace containing the packages for robot description and control.
 * `/REDACTED`: Python scripts for dual-camera hand tracking and coordinate mapping.
 * `/REDACTED`: Wiring diagrams and Raspberry Pi configuration.
@@ -53,9 +54,9 @@ This project is currently under active development. Future updates will include:
 
 ---
 
-## 📌 Current Status: v0.2.2 (Alpha)
-* **Current Version:** 0.2.2-alpha
-* **Last Update:** February 2024
+## 📌 Current Status: v0.3.0 (Alpha)
+* **Current Version:** 0.3.0-alpha
+* **Last Update:** February 2026
 * **Stable Version:** None yet (Under Development)
 
 ---
