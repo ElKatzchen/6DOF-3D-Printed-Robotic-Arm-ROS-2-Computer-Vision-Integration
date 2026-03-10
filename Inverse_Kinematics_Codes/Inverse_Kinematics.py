@@ -2,88 +2,117 @@ import math
 import serial
 import time
 
-#-----SIZES-----
+#----------SIZES (mm)----------
 L1, L2, L3, L4 = 68.0, 165.0, 109.0, 157.0
 
-#-----GRAVITY COMPENSATION-----
+#----------MINIMUM AND MAXIMUM----------
+MIN_SERVO = 15 
+MAX_SERVO = 165
+
+#----------GRAVITY COMPENSATOR----------
 gravity_correction_constant = 0.06 
 
-#-----INVERSE KINEMATICS-----
+#----------JOINT1 SECURITY ANGLE----------
+def clamp(n):
+    return max(MIN_SERVO, min(int(n), MAX_SERVO))
+
+#----------INVERSE KINEMATICS FUNCTION----------
 def inverse_kinematics(x, y, z):
-    #-----HORIZONTAL ROTATION (S3 and S6)-----
-    total_angle_objective = math.degrees(math.atan2(y, x))
-    s6 = 85 + (total_angle_objective * 0.7)
-    s3 = 80 + (total_angle_objective * 0.3)
+    #----------JOINT6 HORIZONTAL ROTATION----------
+    angle_base = math.degrees(math.atan2(y, x))
+    s6 = clamp(85 + angle_base)
 
-    #-----VERTICAL GEOMETRY-----
-    r = math.sqrt(x**2 + y**2)
+    #----------JOINT3 AND ITS REACH----------
+    s3_val = 80 - (angle_base * 0.5)
+    s3 = clamp(s3_val)
+    j3_rad_offset = math.radians(s3_val - 80)
+
+    #---------- CORRECTED VERTICAL GEOMETRY----------
+    r_total = math.sqrt(x**2 + y**2)
+    r_proj = r_total / math.cos(j3_rad_offset) if math.cos(j3_rad_offset) != 0 else r_total
     h = z - L1
-    total_reach = math.sqrt(r**2 + h**2)
+    
+    #----------JOINT1 YAW PITCH ROLL----------
+    s1 = clamp(90 + angle_base)
 
+    #----------JOINT2, JOINT4 AND JOINT5 POSTURE CALCULATION----------
+    total_reach = math.sqrt(r_proj**2 + h**2)
     if total_reach > (L2 + L3 + L4):
-        return f"EXTENDED REACH: {total_reach:.1f}mm"
+        return f"OUT OF REACH: {total_reach:.1f}mm"
 
-    #-----VERSICAL POSTURE-----
+    #----------ATTACH ANGLE PHI----------
     for phi_deg in range(-90, 91, 5):
         phi = math.radians(phi_deg)
-        r_w = r - L4 * math.cos(phi)
+        
+        #----------WRIST POSITION----------
+        r_w = r_proj - L4 * math.cos(phi)
         h_w = h - L4 * math.sin(phi)
+        
         dist_w_sq = r_w**2 + h_w**2
         dist_w = math.sqrt(dist_w_sq)
 
+        #----------WRIST REACH VERIFICATION----------
         if dist_w > (L2 + L3) or dist_w < abs(L2 - L3):
             continue
 
         try:
+            #----------JOINT4 ELBOW COS THEOREM ANGLE----------
             cos_elbow = (L2**2 + L3**2 - dist_w_sq) / (2 * L2 * L3)
-            ang_elbow_int = math.degrees(math.acos(max(-1, min(1, cos_elbow))))
+            ang_elbow_int = math.degrees(math.acos(max(-1.0, min(1.0, cos_elbow))))
             
+            #----------JOINT5 SHOULDER ANGLE
             ang_elev = math.atan2(h_w, r_w)
             cos_apert = (L2**2 + dist_w_sq - L3**2) / (2 * L2 * dist_w)
-            ang_apert = math.acos(max(-1, min(1, cos_apert)))
+            ang_apert = math.acos(max(-1.0, min(1.0, cos_apert)))
             
             q_shoulder = math.degrees(ang_elev + ang_apert)
 
-            #-----DINAMIC CORRECTION-----
-            offset = r * gravity_correction_constant
+            #----------GRAVITY COMPENSATION----------
+            offset = r_proj * gravity_correction_constant
             
-            s5 = 80 + (90 - (q_shoulder + offset))
-            s4 = 80 + (180 - ang_elbow_int)
+            s5 = clamp(80 + (90 - (q_shoulder + offset)))
+            s4 = clamp(80 + (180 - ang_elbow_int))
             
+            #----------JOINT2 WRIST ANGLE (PITCH)----------
             q_forearm = q_shoulder - (180 - ang_elbow_int)
-            vertical_error = phi_deg - q_forearm
-            s2 = 80 - vertical_error 
+            s2 = clamp(80 - (phi_deg - q_forearm))
 
-            s1 = 90 
-
-            if all(0 <= v <= 180 for v in [s1, s2, s3, s4, s5, s6]):
-                return [int(s1), int(s2), int(s3), int(s4), int(s5), int(s6)]
+            return [s1, s2, s3, s4, s5, s6]
         except:
             continue
-
-    return "IMPOSIBLE POSITION"
+    return "IMPOSSIBLE POSITION"
 
 #-----LOOP-----
 try:
-    esp32 = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
-    time.sleep(2)
-    print(f"COMPENSATION ACTIVE OF ({gravity_correction_constant})")
-    print("INTRODUCE X TO EXIT")
+    #----------ESP SENDER INFO----------
+    esp32 = serial.Serial('/dev/ttyUSB0', 115200, timeout=0.1)
+    time.sleep(3)
+    print("SYSTEM READY")
 
     while True:
-        input = input("COORDS X, Y, Z: ")
-        if input.lower() == 'x': break
+        input_coords = input("\nCOORDS X, Y, Z: ")
+        if input_coords.lower() == 'x': break
         try:
-            x, y, z = [float(v.strip()) for v in input.split(',')]
+            parts = [v.strip() for v in input_coords.split(',')]
+            if len(parts) != 3:
+                print("ERROR. EXPECTED FORMAT: X, Y, Z")
+                continue
+            
+            x, y, z = map(float, parts)
             res = inverse_kinematics(x, y, z)
+            
             if isinstance(res, list):
-                s1, s2, s3, s4, s5, s6 = res
-                payload = f"150,{s1},{s2},{s3},{s4},{s5},{s6}\n"
+                #----------FORMAT: $Gripper,S1,S2,S3,S4,S5,S6\n----------
+                full_vals = [150] + res 
+                payload = "$" + ",".join([f"{int(v):03d}" for v in full_vals]) + "\n"
+                
+                esp32.reset_output_buffer()
                 esp32.write(payload.encode())
-                print(f"OK -> SENDING CORRECTED S5: {s5}")
+                print(f"SEND -> {payload.strip()}")
             else:
                 print(f"ALERT: {res}")
-        except:
-            print("FORMAT: X, Y, Z")
+        except Exception as e:
+            print(f"ERROR: {e}")
 finally:
-    if 'esp32' in locals(): esp32.close()
+    if 'esp32' in locals(): 
+        esp32.close()

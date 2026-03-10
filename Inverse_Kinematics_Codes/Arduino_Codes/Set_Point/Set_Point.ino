@@ -17,19 +17,22 @@ int PinServos[] = {23, 22, 19, 18, 5, 17, 16};
 //Change this to the default setting for the servos
 int Set[] = {90, 90, 150, 80, 150, 50, 85}; 
 
-void setup() {
+void setup()
+{
   ESP32PWM::allocateTimer(0);
   ESP32PWM::allocateTimer(1);
   ESP32PWM::allocateTimer(2);
   ESP32PWM::allocateTimer(3);
 
-  for (int i = 0; i < NumServos; i++) {
+  for (int i = 0; i < NumServos; i++)
+  {
     Servos[i].setPeriodHertz(50);
     Servos[i].attach(PinServos[i], 500, 2400); 
     Servos[i].write(Set[i]);
   }
 }
 
-void loop() {
+void loop()
+{
   delay(1000); 
 }

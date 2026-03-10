@@ -1,61 +1,84 @@
 #include <ESP32Servo.h>
 
-//GRIPPER 90---150 open-close
-//JOINT 1 90+-80 ccw-cw
-//JOINT 2 80+-70 up down
-//JOINT 3 80+-70 ccw-cw
-//JOINT 4 80+-75 up-down
-//JOINT 5 80+-75 up-down
-//JOINT 6 85+-80 ccw-cw
-
+//----------PIN DECLARATION----------
 const int NumServos = 7;
 Servo Servos[NumServos];
 int PinServos[] = {23, 22, 19, 18, 5, 17, 16};
 
+//----------LIMITS AND HOME ANGLES----------
 int MinLim[] = {90, 10, 10, 10, 5, 5, 5}; 
 int MaxLim[] = {150, 170, 150, 150, 155, 155, 165};
 int Home[] = {150, 90, 150, 80, 150, 50, 85};
 
-void setup() {
+//----------SETUP----------
+void setup()
+{
+  //----------SERIAL SETUP----------
   Serial.begin(115200); 
   delay(1000);
   Serial.println("SYSTEM INITIALYZED");
 
+  //----------TIMERS ACTIVATION----------
   ESP32PWM::allocateTimer(0);
   ESP32PWM::allocateTimer(1);
   ESP32PWM::allocateTimer(2);
   ESP32PWM::allocateTimer(3);
 
-  for (int i = 0; i < NumServos; i++) {
+  //----------SERVOS ACTIVATION----------
+  for (int i = 0; i < NumServos; i++)
+  {
     Servos[i].setPeriodHertz(50);
-    Servos[i].attach(PinServos[i], 500, 2400); 
     Servos[i].write(Home[i]);
+    Servos[i].attach(PinServos[i], 500, 2400); 
   }
 }
 
-void loop() {
-  if (Serial.available() > 0) {
-    if (isDigit(Serial.peek()) || Serial.peek() == '-') {
-      
-      for (int i = 0; i < NumServos; i++) {
-        int Angle = Serial.parseInt();
-        
-        int SafeSpot = constrain(Angle, MinLim[i], MaxLim[i]);
-        Servos[i].write(SafeSpot);
+//----------LOOP----------
+void loop()
+{
+  //----------SERIAL BEGIN----------
+  if (Serial.available() > 0)
+  {
+    String data = Serial.readStringUntil('\n');
+    data.trim(); 
 
-        while (Serial.available() > 0 && (Serial.peek() == ',' || Serial.peek() == ' ')) {
-          Serial.read();
+    //----------DATA RECIEVE----------
+    if (data.length() > 0)
+    {
+      int servoIndex = 0;
+      int lastIndex = 0;
+
+      //----------PROCESSING----------
+      for (int i = 0; i <= data.length() && servoIndex < NumServos; i++)
+      {
+        if (i == data.length() || data.charAt(i) == ',')
+        {
+          String part = data.substring(lastIndex, i);
+          part.trim();
+          
+          //----------ANGLE OBTAINANCE----------
+          if (part.length() > 0)
+          {
+            int angle = part.toInt();
+
+            //----------ANGLE WRITE----------
+            if (angle > 10 && angle >= MinLim[servoIndex] && angle <= MaxLim[servoIndex])
+            {
+              Servos[servoIndex].write(angle);
+            }
+            else
+            {
+              //----------ANGLE RETAINED----------
+              Serial.print("ANGLE RETAINED");
+              Serial.print(servoIndex);
+              Serial.print("val: ");
+              Serial.println(angle);
+            }
+          }
+          lastIndex = i + 1;
+          servoIndex++;
         }
       }
-
-      while (Serial.available() > 0) {
-        Serial.read();
-      }
-
-    } else {
-      Serial.read();
     }
   }
-
-  Serial.println("OK");
 }

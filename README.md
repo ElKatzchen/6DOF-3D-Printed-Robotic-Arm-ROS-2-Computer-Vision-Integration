@@ -54,9 +54,9 @@ This project is currently under active development. Future updates will include:
 
 ---
 
-## 📌 Current Status: v0.3.0 (Alpha)
-* **Current Version:** 0.3.0-alpha
-* **Last Update:** February 2026
+## 📌 Current Status: v0.4.1 (Alpha)
+* **Current Version:** 0.4.1-alpha
+* **Last Update:** March 2026
 * **Stable Version:** None yet (Under Development)
 
 ---
