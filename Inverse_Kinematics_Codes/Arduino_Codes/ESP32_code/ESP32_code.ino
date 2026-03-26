@@ -37,10 +37,13 @@ void setup()
 }
 
 //----------LOOP----------
-void loop() {
-  if (Serial.available() > 0) {
+void loop()
+{
+  if (Serial.available() > 0)
+  {
     //----------BUFFER FISRT CHARACTER DETECTION----------
-    if (Serial.peek() == '$') {
+    if (Serial.peek() == '$')
+    {
       Serial.read(); 
       
       String data = Serial.readStringUntil('\n');
@@ -51,13 +54,16 @@ void loop() {
       int DataCount = 0;
 
       //----------MANUAL READ----------
-      for (int i = 0; i <= n; i++) {
+      for (int i = 0; i <= n; i++)
+      {
         char c = (i < n) ? data.charAt(i) : '/'; 
 
-        if (c != '/') {
+        if (c != '/')
+        {
           TemporalBlock += c; 
         } 
-        else {
+        else
+        {
           int FinalValue = TemporalBlock.toInt();
           
           if (DataCount == 2) g_grip = FinalValue;
@@ -74,7 +80,8 @@ void loop() {
       }
 
       //----------SERVO WRITE----------
-      if (DataCount >= 9) {
+      if (DataCount >= 9)
+      {
           if (g_grip > 10 && g_grip >= MinLim[0] && g_grip <= MaxLim[0]) Servos[0].write(g_grip);
           if (g_s1   > 10 && g_s1   >= MinLim[1] && g_s1   <= MaxLim[1]) Servos[1].write(g_s1);
           if (g_s2   > 10 && g_s2   >= MinLim[2] && g_s2   <= MaxLim[2]) Servos[2].write(g_s2);
@@ -90,7 +97,8 @@ void loop() {
           Serial.println(answer);
       }
     } 
-    else {
+    else
+    {
       Serial.read();
     }
   }

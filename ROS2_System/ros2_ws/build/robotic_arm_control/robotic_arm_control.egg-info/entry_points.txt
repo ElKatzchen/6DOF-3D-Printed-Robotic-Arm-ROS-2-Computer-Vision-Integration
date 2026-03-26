@@ -1,0 +1,4 @@
+[console_scripts]
+pubsub = robotic_arm_control.pubsub:main
+sub = robotic_arm_control.sub:main
+
