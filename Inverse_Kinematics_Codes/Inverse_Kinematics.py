@@ -5,16 +5,12 @@ import time
 #----------SIZES (mm)----------
 L1, L2, L3, L4 = 68.0, 165.0, 109.0, 157.0
 
-#----------MINIMUM AND MAXIMUM----------
-MIN_SERVO = 15 
-MAX_SERVO = 165
-
 #----------GRAVITY COMPENSATOR----------
 gravity_correction_constant = 0.06 
 
 #----------JOINT1 SECURITY ANGLE----------
 def clamp(n):
-    return max(MIN_SERVO, min(int(n), MAX_SERVO))
+    return max(15, min(int(n), 165))
 
 #----------INVERSE KINEMATICS FUNCTION----------
 def inverse_kinematics(x, y, z):
@@ -102,13 +98,19 @@ try:
             res = inverse_kinematics(x, y, z)
             
             if isinstance(res, list):
-                #----------FORMAT: $Gripper,S1,S2,S3,S4,S5,S6\n----------
-                full_vals = [150] + res 
-                payload = "$" + ",".join([f"{int(v):03d}" for v in full_vals]) + "\n"
+                #----------SENT 2 TRASH DATA----------
+                full_vals = [0, 0, 150] + res 
+                payload = "$" + "/".join([f"{int(v):03d}" for v in full_vals]) + "\n"
                 
-                esp32.reset_output_buffer()
+                esp32.reset_input_buffer()
                 esp32.write(payload.encode())
+                esp32.flush()
                 print(f"SEND -> {payload.strip()}")
+
+                time.sleep(0.05)
+                if esp32.in_waiting > 0:
+                    feedback = esp32.readline().decode('utf-8').strip()
+                    print(f"FEEDBACK -> {feedback}")
             else:
                 print(f"ALERT: {res}")
         except Exception as e:
