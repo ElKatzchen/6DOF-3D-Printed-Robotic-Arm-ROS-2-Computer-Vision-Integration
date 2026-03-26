@@ -40,4 +40,4 @@ This script works in tandem with the Python IK solver. It listens for incoming a
 * **UART RX/TX:** Ensure common ground between the PC/Raspberry Pi and the ESP32.
 * **Power Supply:** Use an external power source for the servos (don't power 7 servos directly from the ESP32). The power supply used is 5VDC 10A.
 
-**Next Step:** For details on how the coordinates are captured, see the [**Vision System**](../Vision_System) documentation.
+**Next Step:** For details on how the coordinates are captured, see the [**ROS2 System**](../ROS2_System) documentation.
