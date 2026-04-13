@@ -8,19 +8,16 @@ class PubSubNode(Node):
         super().__init__('pubsub')
         self.publisher_ = self.create_publisher(Int32MultiArray, '/joint_angles', 10)
         
-        # Constantes de tu brazo (mm)
         self.L1, self.L2, self.L3, self.L4 = 68.0, 165.0, 109.0, 157.0
         self.gravity_correction = 0.06
 
-        # Timer para pedir coordenadas por consola
         self.create_timer(0.1, self.coordinate_loop)
-        self.get_logger().info("Nodo PUBSUB (IK) inicializado. Esperando coordenadas...")
+        self.get_logger().info("Node started. Witing coords...")
 
     def clamp(self, n):
         return max(15, min(int(n), 165))
 
     def inverse_kinematics(self, x, y, z):
-        # --- Tu lógica de IK ---
         angle_base = math.degrees(math.atan2(y, x))
         s6 = self.clamp(85 + angle_base)
         s3_val = 80 - (angle_base * 0.5)
@@ -61,10 +58,8 @@ class PubSubNode(Node):
         return None
 
     def coordinate_loop(self):
-        # Nota: En ROS2, el input() bloquea el hilo principal. 
-        # Para pruebas rápidas funciona, pero luego lo cambiaremos a un Subscriber
         try:
-            val = input("COORDS X,Y,Z (o 'x' para salir): ")
+            val = input("COORDS X,Y,Z ('x' to exit): ")
             if val.lower() == 'x': return
             x, y, z = map(float, val.split(','))
             res = self.inverse_kinematics(x, y, z)
@@ -73,9 +68,9 @@ class PubSubNode(Node):
                 msg = Int32MultiArray()
                 msg.data = res
                 self.publisher_.publish(msg)
-                self.get_logger().info(f"Publicando ángulos: {res}")
+                self.get_logger().info(f"Publishing angles: {res}")
             else:
-                self.get_logger().warn("Posición fuera de alcance o imposible.")
+                self.get_logger().warn("Out of reach")
         except Exception as e:
             pass
 
