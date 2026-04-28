@@ -60,8 +60,8 @@ This code only works with Inverse Kinematics, ROS2 and Artifisial Vision are sti
 
 ---
 
-## 📌 Current Status: v1.0.0 (Beta)
-* **Current Version:** 1.0.0-beta
+## 📌 Current Status: v1.1.0 (Beta)
+* **Current Version:** 1.1.0-beta
 * **Last Update:** March 2026
 * **Stable Version:** None yet (Under Development)
 
