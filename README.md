@@ -54,8 +54,14 @@ This project is currently under active development. Future updates will include:
 
 ---
 
-## 📌 Current Status: v0.5.3 (Alpha)
-* **Current Version:** 0.5.3-alpha
+## 🏗️ DISCLAIMER
+
+This code only works with INverse Kinematics, ROS2 and Artifisial Vision are still being tested
+
+---
+
+## 📌 Current Status: v1.0.0 (Beta)
+* **Current Version:** 1.0.0-beta
 * **Last Update:** March 2026
 * **Stable Version:** None yet (Under Development)
 

@@ -56,7 +56,7 @@ def inverse_kinematics(x, y, z):
             cos_elbow = (L2**2 + L3**2 - dist_w_sq) / (2 * L2 * L3)
             ang_elbow_int = math.degrees(math.acos(max(-1.0, min(1.0, cos_elbow))))
             
-            #----------JOINT5 SHOULDER ANGLE
+            #----------JOINT5 SHOULDER ANGLE----------
             ang_elev = math.atan2(h_w, r_w)
             cos_apert = (L2**2 + dist_w_sq - L3**2) / (2 * L2 * dist_w)
             ang_apert = math.acos(max(-1.0, min(1.0, cos_apert)))
@@ -99,7 +99,7 @@ try:
             
             if isinstance(res, list):
                 #----------SENT 2 TRASH DATA----------
-                full_vals = [0, 0, 150] + res 
+                full_vals = [0, 0, 90] + res 
                 payload = "$" + "/".join([f"{int(v):03d}" for v in full_vals]) + "\n"
                 
                 esp32.reset_input_buffer()

@@ -41,42 +41,41 @@ void loop()
 {
   if (Serial.available() > 0)
   {
-    //----------BUFFER FISRT CHARACTER DETECTION----------
     if (Serial.peek() == '$')
     {
-      Serial.read(); 
+      Serial.read();
       
       String data = Serial.readStringUntil('\n');
       data.trim();
-      int n = data.length();
       
-      String TemporalBlock = ""; 
+      //----------DATA FILTER----------
+      if (data.length() < 20) return; 
+
       int DataCount = 0;
+      int startIndex = 0;
+      int endIndex = 0;
 
-      //----------MANUAL READ----------
-      for (int i = 0; i <= n; i++)
+      //----------DATA LECTURE----------
+      while ((endIndex = data.indexOf('/', startIndex)) != -1)
       {
-        char c = (i < n) ? data.charAt(i) : '/'; 
+        int FinalValue = data.substring(startIndex, endIndex).toInt();
+        
+        if (DataCount == 2) g_grip = FinalValue;
+        else if (DataCount == 3) g_s1 = FinalValue;
+        else if (DataCount == 4) g_s2 = FinalValue;
+        else if (DataCount == 5) g_s3 = FinalValue;
+        else if (DataCount == 6) g_s4 = FinalValue;
+        else if (DataCount == 7) g_s5 = FinalValue;
+        else if (DataCount == 8) g_s6 = FinalValue;
 
-        if (c != '/')
-        {
-          TemporalBlock += c; 
-        } 
-        else
-        {
-          int FinalValue = TemporalBlock.toInt();
-          
-          if (DataCount == 2) g_grip = FinalValue;
-          else if (DataCount == 3) g_s1 = FinalValue;
-          else if (DataCount == 4) g_s2 = FinalValue;
-          else if (DataCount == 5) g_s3 = FinalValue;
-          else if (DataCount == 6) g_s4 = FinalValue;
-          else if (DataCount == 7) g_s5 = FinalValue;
-          else if (DataCount == 8) g_s6 = FinalValue;
+        startIndex = endIndex + 1;
+        DataCount++;
+      }
 
-          TemporalBlock = "";
-          DataCount++;
-        }
+      if (DataCount == 8)
+      {
+        g_s6 = data.substring(startIndex).toInt();
+        DataCount++;
       }
 
       //----------SERVO WRITE----------
@@ -90,7 +89,6 @@ void loop()
           if (g_s5   > 10 && g_s5   >= MinLim[5] && g_s5   <= MaxLim[5]) Servos[5].write(g_s5);
           if (g_s6   > 10 && g_s6   >= MinLim[6] && g_s6   <= MaxLim[6]) Servos[6].write(g_s6);
           
-          Serial.println("DISPATCH_COMPLETE");
           char answer[64]; 
           sprintf(answer, "ACK:%03d/%03d/%03d/%03d/%03d/%03d/%03d", 
                   g_grip, g_s1, g_s2, g_s3, g_s4, g_s5, g_s6);
