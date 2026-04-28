@@ -56,7 +56,7 @@ This project is currently under active development. Future updates will include:
 
 ## 🏗️ DISCLAIMER
 
-This code only works with INverse Kinematics, ROS2 and Artifisial Vision are still being tested
+This code only works with Inverse Kinematics, ROS2 and Artifisial Vision are still being tested
 
 ---
 
