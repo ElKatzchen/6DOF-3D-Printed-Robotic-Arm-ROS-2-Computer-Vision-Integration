@@ -3,11 +3,11 @@
 //----------PIN DECLARATION----------
 const int NumServos = 7;
 Servo Servos[NumServos];
-int PinServos[] = {23, 22, 19, 18, 5, 17, 16};
+int PinServos[] = {32, 33, 25, 19, 18, 5, 27};
 
 //----------LIMITS AND HOME ANGLES----------
 int MinLim[] = {90, 10, 10, 10, 5, 5, 5}; 
-int MaxLim[] = {150, 170, 150, 150, 155, 155, 165};
+int MaxLim[] = {150, 170, 170, 150, 165, 165, 165};
 int Home[] = {150, 90, 150, 80, 150, 50, 85};
 
 //----------ANGLES GIVEN----------
@@ -81,13 +81,21 @@ void loop()
       //----------SERVO WRITE----------
       if (DataCount >= 9)
       {
-          if (g_grip > 10 && g_grip >= MinLim[0] && g_grip <= MaxLim[0]) Servos[0].write(g_grip);
-          if (g_s1   > 10 && g_s1   >= MinLim[1] && g_s1   <= MaxLim[1]) Servos[1].write(g_s1);
-          if (g_s2   > 10 && g_s2   >= MinLim[2] && g_s2   <= MaxLim[2]) Servos[2].write(g_s2);
-          if (g_s3   > 10 && g_s3   >= MinLim[3] && g_s3   <= MaxLim[3]) Servos[3].write(g_s3);
-          if (g_s4   > 10 && g_s4   >= MinLim[4] && g_s4   <= MaxLim[4]) Servos[4].write(g_s4);
-          if (g_s5   > 10 && g_s5   >= MinLim[5] && g_s5   <= MaxLim[5]) Servos[5].write(g_s5);
-          if (g_s6   > 10 && g_s6   >= MinLim[6] && g_s6   <= MaxLim[6]) Servos[6].write(g_s6);
+          g_grip = constrain(g_grip, MinLim[0], MaxLim[0]);
+          g_s1   = constrain(g_s1,   MinLim[1], MaxLim[1]);
+          g_s2   = constrain(g_s2,   MinLim[2], MaxLim[2]);
+          g_s3   = constrain(g_s3,   MinLim[3], MaxLim[3]);
+          g_s4   = constrain(g_s4,   MinLim[4], MaxLim[4]);
+          g_s5   = constrain(g_s5,   MinLim[5], MaxLim[5]);
+          g_s6   = constrain(g_s6,   MinLim[6], MaxLim[6]);
+
+          Servos[0].write(g_grip);
+          Servos[1].write(g_s1);
+          Servos[2].write(g_s2);
+          Servos[3].write(g_s3);
+          Servos[4].write(g_s4);
+          Servos[5].write(g_s5);
+          Servos[6].write(g_s6);
           
           char answer[64]; 
           sprintf(answer, "ACK:%03d/%03d/%03d/%03d/%03d/%03d/%03d", 

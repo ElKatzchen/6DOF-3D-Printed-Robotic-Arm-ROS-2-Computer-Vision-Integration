@@ -1,6 +1,9 @@
+import math
+import serial
+import time
 import numpy as np
 
-# ----------SIZES (mm)-----------
+#----------SIZES (mm)----------
 L1, L2, L3, L4 = 68.0, 165.0, 109.0, 157.0
 
 #----------DENAVIT HARTEMBERG MATRIX----------
@@ -92,24 +95,43 @@ def inverse_kinematics(x, y, z):
 
     return "IMPOSSIBLE POSITION"
 
-#----------LOOP----------
-while True:
-    input_coords = input("\nCOORDS X, Y, Z: ")
-    if input_coords.lower() == 'x': break
-    
-    try:
-        parts = [v.strip() for v in input_coords.split(',')]
-        if len(parts) != 3:
-             print("ERROR. FORMAT: X, Y, Z")
-             continue
-             
-        x, y, z = map(float, parts)
-        res = inverse_kinematics(x, y, z)
-        
-        if isinstance(res, list):
-            print(f"OK -> S1:{res[0]} S2:{res[1]} S3:{res[2]} S4:{res[3]} S5:{res[4]} S6:{res[5]}")
-            print(f"PAYLOAD: ${res[0]:03d}/{res[1]:03d}/{res[2]:03d}/{res[3]:03d}/{res[4]:03d}/{res[5]:03d}")
-        else:
-            print(f"ALERT: {res}")
-    except Exception as e:
-        print(f"ERROR: {e}")
+#-----LOOP-----
+try:
+    #----------ESP SENDER INFO----------
+    esp32 = serial.Serial('/dev/ttyUSB0', 115200, timeout=0.1)
+    time.sleep(3)
+    print("SYSTEM READY")
+
+    while True:
+        input_coords = input("\nCOORDS X, Y, Z: ")
+        if input_coords.lower() == 'x': break
+        try:
+            parts = [v.strip() for v in input_coords.split(',')]
+            if len(parts) != 3:
+                print("ERROR. EXPECTED FORMAT: X, Y, Z")
+                continue
+            
+            x, y, z = map(float, parts)
+            res = inverse_kinematics(x, y, z)
+            
+            if isinstance(res, list):
+                #----------SENT 2 TRASH DATA----------
+                full_vals = [0, 0, 90] + res 
+                payload = "$" + "/".join([f"{int(v):03d}" for v in full_vals]) + "\n"
+                
+                esp32.reset_input_buffer()
+                esp32.write(payload.encode())
+                esp32.flush()
+                print(f"SEND -> {payload.strip()}")
+
+                time.sleep(0.05)
+                if esp32.in_waiting > 0:
+                    feedback = esp32.readline().decode('utf-8').strip()
+                    print(f"FEEDBACK -> {feedback}")
+            else:
+                print(f"ALERT: {res}")
+        except Exception as e:
+            print(f"ERROR: {e}")
+finally:
+    if 'esp32' in locals(): 
+        esp32.close()
