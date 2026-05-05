@@ -1,0 +1,14 @@
+services:
+  ros2_env:
+    image: images_system
+    container_name: rpi_vision_node
+    network_mode: host
+    privileged: True
+    volumes:
+      - /dev:/dev
+      - ./ros2_ws:/ros2_ws
+    working_dir: /ros2_ws
+    tty: true
+    stdin_open: true
+    environment:
+      - ROS_DOMAIN_ID=1
