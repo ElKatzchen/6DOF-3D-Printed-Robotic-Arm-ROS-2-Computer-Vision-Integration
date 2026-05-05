@@ -6,17 +6,24 @@ import math
 class PubSubNode(Node):
     def __init__(self):
         super().__init__('pubsub')
-        self.publisher_ = self.create_publisher(Int32MultiArray, '/joint_angles', 10)
+        self.publisher_ = self.create_publisher(
+            Int32MultiArray,
+            'angles',
+            10)
         
+        #----------ARM SIZE (mm)----------
         self.L1, self.L2, self.L3, self.L4 = 68.0, 165.0, 109.0, 157.0
-        self.gravity_correction = 0.06
+        self.gravity_correction = 0.03
 
+        #----------TIMER----------
         self.create_timer(0.1, self.coordinate_loop)
-        self.get_logger().info("Node started. Witing coords...")
+        self.get_logger().info("Node PUBSUB (IK) initialized. Witing coords...")
 
+    #----------JOINT1 MIN MAX VALUES----------
     def clamp(self, n):
         return max(15, min(int(n), 165))
 
+    #-----------INVERSE KINEMATICS LOGIC----------
     def inverse_kinematics(self, x, y, z):
         angle_base = math.degrees(math.atan2(y, x))
         s6 = self.clamp(85 + angle_base)
@@ -52,14 +59,15 @@ class PubSubNode(Node):
                 s4 = self.clamp(80 + (180 - ang_elbow_int))
                 q_forearm = q_shoulder - (180 - ang_elbow_int)
                 s2 = self.clamp(80 - (phi_deg - q_forearm))
-                return [150, s1, s2, s3, s4, s5, s6] # [Gripper + 6DOF]
+                return [130, s1, s2, s3, s4, s5, s6]
             except:
                 continue
         return None
 
+    #----------LOOP----------
     def coordinate_loop(self):
         try:
-            val = input("COORDS X,Y,Z ('x' to exit): ")
+            val = input("COORDS X,Y,Z (X TO EXIT): ")
             if val.lower() == 'x': return
             x, y, z = map(float, val.split(','))
             res = self.inverse_kinematics(x, y, z)
@@ -68,9 +76,9 @@ class PubSubNode(Node):
                 msg = Int32MultiArray()
                 msg.data = res
                 self.publisher_.publish(msg)
-                self.get_logger().info(f"Publishing angles: {res}")
+                self.get_logger().info(f"PUBLISHING ANGLES: {res}")
             else:
-                self.get_logger().warn("Out of reach")
+                self.get_logger().warn("OUT OF REACH POSITION")
         except Exception as e:
             pass
 

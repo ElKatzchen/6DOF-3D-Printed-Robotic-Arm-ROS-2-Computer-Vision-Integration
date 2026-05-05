@@ -26,6 +26,7 @@ setup(
         'console_scripts': [
             'pubsup = v_system.pubsup:main',
             'pubside = v_system.pubside:main',
+            'sub = v_system.sub:main',
         ],
     },
 )

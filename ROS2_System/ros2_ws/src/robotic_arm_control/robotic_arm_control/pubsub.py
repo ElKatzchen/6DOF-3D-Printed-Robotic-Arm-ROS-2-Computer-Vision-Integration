@@ -13,7 +13,7 @@ class PubSubNode(Node):
         
         #----------ARM SIZE (mm)----------
         self.L1, self.L2, self.L3, self.L4 = 68.0, 165.0, 109.0, 157.0
-        self.gravity_correction = 0.06
+        self.gravity_correction = 0.03
 
         #----------TIMER----------
         self.create_timer(0.1, self.coordinate_loop)

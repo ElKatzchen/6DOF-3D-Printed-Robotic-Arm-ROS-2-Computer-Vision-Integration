@@ -12,14 +12,15 @@ class SubNode(Node):
             time.sleep(2)
             self.get_logger().info("Conection UART with ESP32 stablished.")
         except Exception as e:
-            self.get_logger().error(f"Port not available: {e}")
+            self.get_logger().error(f"ERROR: {e}")
 
         self.subscription = self.create_subscription(
             Int32MultiArray,
-            '/joint_angles',
+            'angles',
             self.listener_callback,
             10)
 
+    #----------GENERATE MESSAGE FOR UART----------
     def listener_callback(self, msg):
         full_vals = [0, 0] + list(msg.data)
         payload = "$" + "/".join([f"{int(v):03d}" for v in full_vals]) + "\n"
@@ -28,12 +29,12 @@ class SubNode(Node):
             self.esp32.reset_input_buffer()
             self.esp32.write(payload.encode())
             self.esp32.flush()
-            self.get_logger().info(f"Enviando a ESP32: {payload.strip()}")
+            self.get_logger().info(f"SENDING: {payload.strip()}")
             
             time.sleep(0.05)
             if self.esp32.in_waiting > 0:
                 line = self.esp32.readline().decode('utf-8', errors='ignore').strip()
-                self.get_logger().info(f"ESP32 responde: {line}")
+                self.get_logger().info(f"ESP32 ANSWERS: {line}")
         except Exception as e:
             self.get_logger().error(f"Error UART: {e}")
 
