@@ -1,0 +1,3 @@
+[console_scripts]
+pubsub = vision_processor.pubsub:main
+
