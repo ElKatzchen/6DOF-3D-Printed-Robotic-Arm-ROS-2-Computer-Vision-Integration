@@ -1,0 +1,5 @@
+[console_scripts]
+pubside = v_system.pubside:main
+pubsup = v_system.pubsup:main
+sub = v_system.sub:main
+
