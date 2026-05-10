@@ -13,4 +13,6 @@ test/test_copyright.py
 test/test_flake8.py
 test/test_pep257.py
 vision_processor/__init__.py
+vision_processor/calib_side_data.npz
+vision_processor/calib_upside_data.npz
 vision_processor/pubsub.py

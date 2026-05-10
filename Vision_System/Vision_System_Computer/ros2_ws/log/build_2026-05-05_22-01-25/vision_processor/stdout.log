@@ -1,0 +1,19 @@
+running develop
+running egg_info
+writing vision_processor.egg-info/PKG-INFO
+writing dependency_links to vision_processor.egg-info/dependency_links.txt
+writing entry points to vision_processor.egg-info/entry_points.txt
+writing requirements to vision_processor.egg-info/requires.txt
+writing top-level names to vision_processor.egg-info/top_level.txt
+reading manifest file 'vision_processor.egg-info/SOURCES.txt'
+writing manifest file 'vision_processor.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/install/vision_processor/lib/python3.10/site-packages/vision-processor.egg-link (link to .)
+Installing pubsub script to /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/install/vision_processor/lib/vision_processor
+
+Installed /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/build/vision_processor
+running symlink_data
+symbolically linking /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/build/vision_processor/resource/vision_processor -> /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/install/vision_processor/share/ament_index/resource_index/packages
+symbolically linking /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/build/vision_processor/package.xml -> /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/install/vision_processor/share/vision_processor
+symbolically linking /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/build/vision_processor/vision_processor/calib_upside_data.npz -> /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/install/vision_processor/lib/vision_processor
+symbolically linking /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/build/vision_processor/vision_processor/calib_side_data.npz -> /home/katzchen/Documents/Taller/6DOF-3D-Printed-Robotic-Arm-ROS-2-Computer-Vision-Integration/Vision_System/Vision_System_Computer/ros2_ws/install/vision_processor/lib/vision_processor

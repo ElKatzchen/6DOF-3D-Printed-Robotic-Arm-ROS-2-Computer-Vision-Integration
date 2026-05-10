@@ -49,7 +49,7 @@ void loop()
       data.trim();
       
       //----------DATA FILTER----------
-      if (data.length() < 20) return; 
+      if (data.length() < 15) return; 
 
       int DataCount = 0;
       int startIndex = 0;
@@ -60,26 +60,26 @@ void loop()
       {
         int FinalValue = data.substring(startIndex, endIndex).toInt();
         
-        if (DataCount == 2) g_grip = FinalValue;
-        else if (DataCount == 3) g_s1 = FinalValue;
-        else if (DataCount == 4) g_s2 = FinalValue;
-        else if (DataCount == 5) g_s3 = FinalValue;
-        else if (DataCount == 6) g_s4 = FinalValue;
-        else if (DataCount == 7) g_s5 = FinalValue;
-        else if (DataCount == 8) g_s6 = FinalValue;
+        if (DataCount == 0) g_grip = FinalValue;
+        else if (DataCount == 1) g_s1 = FinalValue;
+        else if (DataCount == 2) g_s2 = FinalValue;
+        else if (DataCount == 3) g_s3 = FinalValue;
+        else if (DataCount == 4) g_s4 = FinalValue;
+        else if (DataCount == 5) g_s5 = FinalValue;
+        else if (DataCount == 6) g_s6 = FinalValue;
 
         startIndex = endIndex + 1;
         DataCount++;
       }
 
-      if (DataCount == 8)
+      if (DataCount == 6)
       {
         g_s6 = data.substring(startIndex).toInt();
         DataCount++;
       }
 
       //----------SERVO WRITE----------
-      if (DataCount >= 9)
+      if (DataCount >= 7)
       {
           g_grip = constrain(g_grip, MinLim[0], MaxLim[0]);
           g_s1   = constrain(g_s1,   MinLim[1], MaxLim[1]);
