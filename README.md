@@ -41,7 +41,7 @@ The repository is organized into several folders:
 * `/3D-Printed_Files`: Includes STL files for printing and SolidWorks 2025 source files.
 * `/Inverse_Kinematics_Codes`: Includes all necesary codes for the inverse kinematics programming.
 * `/ROS2_System`: The ROS 2 workspace containing the packages for robot description and control.
-* `/REDACTED`: Python scripts for dual-camera hand tracking and coordinate mapping.
+* `/Vision_System`: Python scripts for dual-camera hand tracking and coordinate mapping.
 * `/REDACTED`: Wiring diagrams and Raspberry Pi configuration.
 
 ---
@@ -56,12 +56,12 @@ This project is currently under active development. Future updates will include:
 
 ## 🏗️ DISCLAIMER
 
-This code only works with Inverse Kinematics, ROS2 and Artifisial Vision are still being tested
+This code is already working, but some calibration needs to be done to be fully operational
 
 ---
 
-## 📌 Current Status: v1.2.0 (Beta)
-* **Current Version:** 1.2.0-beta
+## 📌 Current Status: v2.0.0 (Beta)
+* **Current Version:** 2.0.0-beta
 * **Last Update:** March 2026
 * **Stable Version:** None yet (Under Development)
 

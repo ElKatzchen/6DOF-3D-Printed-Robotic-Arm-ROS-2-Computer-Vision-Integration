@@ -36,4 +36,4 @@ Navigate to the root of your workspace and run:
 colcon build --symlink-install
 source install/setup.bash
 
-**Next Step:** For details on how the coordinates artificail system works, see [**Vision System**](../Artificial_System) documentation.
+**Next Step:** For details on how the coordinates artificail system works, see [**Vision System**](../Vision_System) documentation.
