@@ -1,0 +1,23 @@
+[0.683s] Invoking command in '/ros2_ws/src/v_system': PYTHONPATH=/ros2_ws/build/v_system/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/v_system/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/v_system build --build-base /ros2_ws/build/v_system/build install --record /ros2_ws/build/v_system/install.log --single-version-externally-managed install_data
+[0.892s] running egg_info
+[0.893s] writing ../../build/v_system/v_system.egg-info/PKG-INFO
+[0.895s] writing dependency_links to ../../build/v_system/v_system.egg-info/dependency_links.txt
+[0.895s] writing entry points to ../../build/v_system/v_system.egg-info/entry_points.txt
+[0.895s] writing requirements to ../../build/v_system/v_system.egg-info/requires.txt
+[0.897s] writing top-level names to ../../build/v_system/v_system.egg-info/top_level.txt
+[0.900s] reading manifest file '../../build/v_system/v_system.egg-info/SOURCES.txt'
+[0.901s] writing manifest file '../../build/v_system/v_system.egg-info/SOURCES.txt'
+[0.901s] running build
+[0.903s] running build_py
+[0.903s] running install
+[0.903s] running install_lib
+[0.905s] running install_data
+[0.905s] running install_egg_info
+[0.910s] removing '/ros2_ws/install/v_system/lib/python3.10/site-packages/v_system-0.0.0-py3.10.egg-info' (and everything under it)
+[0.910s] Copying ../../build/v_system/v_system.egg-info to /ros2_ws/install/v_system/lib/python3.10/site-packages/v_system-0.0.0-py3.10.egg-info
+[0.910s] running install_scripts
+[0.937s] Installing pubside script to /ros2_ws/install/v_system/lib/v_system
+[0.938s] Installing pubsup script to /ros2_ws/install/v_system/lib/v_system
+[0.939s] Installing sub script to /ros2_ws/install/v_system/lib/v_system
+[0.940s] writing list of installed files to '/ros2_ws/build/v_system/install.log'
+[1.000s] Invoked command in '/ros2_ws/src/v_system' returned '0': PYTHONPATH=/ros2_ws/build/v_system/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/v_system/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/v_system build --build-base /ros2_ws/build/v_system/build install --record /ros2_ws/build/v_system/install.log --single-version-externally-managed install_data

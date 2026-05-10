@@ -1,0 +1,24 @@
+running egg_info
+writing ../../build/v_system/v_system.egg-info/PKG-INFO
+writing dependency_links to ../../build/v_system/v_system.egg-info/dependency_links.txt
+writing entry points to ../../build/v_system/v_system.egg-info/entry_points.txt
+writing requirements to ../../build/v_system/v_system.egg-info/requires.txt
+writing top-level names to ../../build/v_system/v_system.egg-info/top_level.txt
+reading manifest file '../../build/v_system/v_system.egg-info/SOURCES.txt'
+writing manifest file '../../build/v_system/v_system.egg-info/SOURCES.txt'
+running build
+running build_py
+copying v_system/sub.py -> /ros2_ws/build/v_system/build/lib/v_system
+running install
+running install_lib
+copying /ros2_ws/build/v_system/build/lib/v_system/sub.py -> /ros2_ws/install/v_system/lib/python3.10/site-packages/v_system
+byte-compiling /ros2_ws/install/v_system/lib/python3.10/site-packages/v_system/sub.py to sub.cpython-310.pyc
+running install_data
+running install_egg_info
+removing '/ros2_ws/install/v_system/lib/python3.10/site-packages/v_system-0.0.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/v_system/v_system.egg-info to /ros2_ws/install/v_system/lib/python3.10/site-packages/v_system-0.0.0-py3.10.egg-info
+running install_scripts
+Installing pubside script to /ros2_ws/install/v_system/lib/v_system
+Installing pubsup script to /ros2_ws/install/v_system/lib/v_system
+Installing sub script to /ros2_ws/install/v_system/lib/v_system
+writing list of installed files to '/ros2_ws/build/v_system/install.log'

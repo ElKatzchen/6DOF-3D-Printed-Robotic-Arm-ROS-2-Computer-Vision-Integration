@@ -13,12 +13,13 @@ class PubSide(Node):
         #----------READ CAMERA----------
         self.cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
         self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         self.cap.set(cv2.CAP_PROP_FPS, 20)
         
         self.bridge = CvBridge()
         self.timer = self.create_timer(0.05, self.timer_callback)
+        self.get_logger().info("PUBSIDE NODE LAUNCHED")
 
     def timer_callback(self):
         if not self.cap.isOpened():
