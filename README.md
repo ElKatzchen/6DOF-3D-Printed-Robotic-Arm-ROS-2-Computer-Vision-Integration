@@ -45,6 +45,14 @@ The repository is organized into several folders:
 
 ---
 
+## 🛠️ Future Work
+
+* Add 360 degrees motors and a closed loop control system
+* Integrate Move It 2
+* Integrate Reinforcement Learning on the Vision System
+
+---
+
 ## 📌 Current Status: v3.0.0
 * **Current Version:** 3.0.0
 * **Last Update:** June 2026
