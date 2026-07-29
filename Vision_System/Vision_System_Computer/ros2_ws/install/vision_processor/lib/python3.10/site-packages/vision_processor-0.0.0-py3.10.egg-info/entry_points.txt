@@ -1,2 +1,5 @@
 [console_scripts]
+pubside = vision_processor.pubside:main
 pubsub = vision_processor.pubsub:main
+pubsup = vision_processor.pubsup:main
+sub = vision_processor.sub:main

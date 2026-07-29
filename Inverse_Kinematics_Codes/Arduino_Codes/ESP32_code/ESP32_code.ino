@@ -1,110 +1,104 @@
 #include <ESP32Servo.h>
 
-//----------PIN DECLARATION----------
 const int NumServos = 7;
 Servo Servos[NumServos];
 int PinServos[] = {32, 33, 25, 19, 18, 5, 27};
 
-//----------LIMITS AND HOME ANGLES----------
-int MinLim[] = {90, 10, 10, 10, 5, 5, 5}; 
-int MaxLim[] = {150, 170, 170, 150, 175, 175, 165};
-int Home[] = {150, 90, 150, 80, 150, 50, 85};
+int MinLim[] = {30, 10, 10, 10, 5, 5, 5}; 
+int MaxLim[] = {90, 170, 170, 150, 175, 175, 165};
+int Home[] = {90, 90, 150, 80, 150, 50, 85};
 
-//----------ANGLES GIVEN----------
-int g_grip, g_s1, g_s2, g_s3, g_s4, g_s5, g_s6;
+int g_grip_actual, g_grip_target; 
+int g_s1, g_s2, g_s3, g_s4, g_s5, g_s6;
 
-//----------SETUP----------
-void setup()
-{
-  //----------SERIAL SETUP----------
-  Serial.begin(115200); 
+const int Samples = 5;
+int Buffer[7][Samples];
+int Indice = 0;
+
+unsigned long lastGripTime = 0;
+const long gripInterval = 200;
+
+int PromCalculus(int servoIdx, int nuevoValor) {
+  Buffer[servoIdx][Indice] = nuevoValor;
+  long suma = 0;
+  for (int i = 0; i < Samples; i++) {
+    suma += Buffer[servoIdx][i];
+  }
+  return suma / Samples;
+}
+
+void setup() {
+  Serial.begin(115200);
   delay(1000);
-  Serial.println("SYSTEM INITIALYZED");
-
-  //----------TIMERS ACTIVATION----------
+  
   ESP32PWM::allocateTimer(0);
   ESP32PWM::allocateTimer(1);
   ESP32PWM::allocateTimer(2);
   ESP32PWM::allocateTimer(3);
 
-  //----------SERVOS ACTIVATION----------
-  for (int i = 0; i < NumServos; i++)
-  {
+  for (int i = 0; i < NumServos; i++) {
     Servos[i].setPeriodHertz(50);
     Servos[i].write(Home[i]);
-    Servos[i].attach(PinServos[i], 500, 2400); 
+    Servos[i].attach(PinServos[i], 500, 2400);
+    for(int j = 0; j < Samples; j++) Buffer[i][j] = Home[i];
   }
+  g_grip_actual = Home[0];
+  g_grip_target = Home[0];
 }
 
-//----------LOOP----------
-void loop()
-{
-  if (Serial.available() > 0)
-  {
-    if (Serial.peek() == '$')
-    {
-      Serial.read();
+void loop() {
+  if (millis() - lastGripTime >= gripInterval) {
+    if (g_grip_actual != g_grip_target) {
+      if (g_grip_actual < g_grip_target) g_grip_actual += 5;
+      else g_grip_actual -= 5;
       
+      g_grip_actual = constrain(g_grip_actual, MinLim[0], MaxLim[0]);
+      Servos[0].write(g_grip_actual);
+    }
+    lastGripTime = millis();
+  }
+
+  if (Serial.available() > 0) {
+    if (Serial.peek() == '$') {
+      Serial.read();
       String data = Serial.readStringUntil('\n');
       data.trim();
       
-      //----------DATA FILTER----------
-      if (data.length() < 15) return; 
+      if (data.length() < 15) return;
 
+      int values[7];
       int DataCount = 0;
       int startIndex = 0;
-      int endIndex = 0;
+      int endIndex;
 
-      //----------DATA LECTURE----------
-      while ((endIndex = data.indexOf('/', startIndex)) != -1)
-      {
-        int FinalValue = data.substring(startIndex, endIndex).toInt();
-        
-        if (DataCount == 0) g_grip = FinalValue;
-        else if (DataCount == 1) g_s1 = FinalValue;
-        else if (DataCount == 2) g_s2 = FinalValue;
-        else if (DataCount == 3) g_s3 = FinalValue;
-        else if (DataCount == 4) g_s4 = FinalValue;
-        else if (DataCount == 5) g_s5 = FinalValue;
-        else if (DataCount == 6) g_s6 = FinalValue;
-
+      while ((endIndex = data.indexOf('/', startIndex)) != -1) {
+        if (DataCount < 7) values[DataCount++] = data.substring(startIndex, endIndex).toInt();
         startIndex = endIndex + 1;
-        DataCount++;
       }
+      if (DataCount < 7) values[DataCount++] = data.substring(startIndex).toInt();
 
-      if (DataCount == 6)
-      {
-        g_s6 = data.substring(startIndex).toInt();
-        DataCount++;
+      if (DataCount >= 7) {
+        // Gripper: sin filtro, va directo al target para la rampa
+        g_grip_target = constrain(values[0], MinLim[0], MaxLim[0]);
+        
+        // Servos 1-6: aplican el filtro de media móvil
+        g_s1 = PromCalculus(1, constrain(values[1], MinLim[1], MaxLim[1]));
+        g_s2 = PromCalculus(2, constrain(values[2], MinLim[2], MaxLim[2]));
+        g_s3 = PromCalculus(3, constrain(values[3], MinLim[3], MaxLim[3]));
+        g_s4 = PromCalculus(4, constrain(values[4], MinLim[4], MaxLim[4]));
+        g_s5 = PromCalculus(5, constrain(values[5], MinLim[5], MaxLim[5]));
+        g_s6 = PromCalculus(6, constrain(values[6], MinLim[6], MaxLim[6]));
+
+        Servos[1].write(g_s1);
+        Servos[2].write(g_s2);
+        Servos[3].write(g_s3);
+        Servos[4].write(g_s4);
+        Servos[5].write(g_s5);
+        Servos[6].write(g_s6);
+        
+        Indice = (Indice + 1) % Samples;
       }
-
-      //----------SERVO WRITE----------
-      if (DataCount >= 7)
-      {
-          g_grip = constrain(g_grip, MinLim[0], MaxLim[0]);
-          g_s1   = constrain(g_s1,   MinLim[1], MaxLim[1]);
-          g_s2   = constrain(g_s2,   MinLim[2], MaxLim[2]);
-          g_s3   = constrain(g_s3,   MinLim[3], MaxLim[3]);
-          g_s4   = constrain(g_s4,   MinLim[4], MaxLim[4]);
-          g_s5   = constrain(g_s5,   MinLim[5], MaxLim[5]);
-          g_s6   = constrain(g_s6,   MinLim[6], MaxLim[6]);
-
-          Servos[0].write(g_grip);
-          Servos[1].write(g_s1);
-          Servos[2].write(g_s2);
-          Servos[3].write(g_s3);
-          Servos[4].write(g_s4);
-          Servos[5].write(g_s5);
-          Servos[6].write(g_s6);
-          
-          char answer[64]; 
-          sprintf(answer, "ACK:%03d/%03d/%03d/%03d/%03d/%03d/%03d", 
-                  g_grip, g_s1, g_s2, g_s3, g_s4, g_s5, g_s6);
-          Serial.println(answer);
-      }
-    } 
-    else
-    {
+    } else {
       Serial.read();
     }
   }

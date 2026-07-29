@@ -15,4 +15,7 @@ test/test_pep257.py
 vision_processor/__init__.py
 vision_processor/calib_side_data.npz
 vision_processor/calib_upside_data.npz
+vision_processor/pubside.py
 vision_processor/pubsub.py
+vision_processor/pubsup.py
+vision_processor/sub.py

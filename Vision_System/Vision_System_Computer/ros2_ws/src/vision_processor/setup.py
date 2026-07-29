@@ -29,7 +29,10 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'pubsup = vision_processor.pubsup:main',
+            'pubside = vision_processor.pubside:main',
             'pubsub = vision_processor.pubsub:main',
+            'sub = vision_processor.sub:main',
         ],
     },
 )

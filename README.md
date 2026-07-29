@@ -42,28 +42,13 @@ The repository is organized into several folders:
 * `/Inverse_Kinematics_Codes`: Includes all necesary codes for the inverse kinematics programming.
 * `/ROS2_System`: The ROS 2 workspace containing the packages for robot description and control.
 * `/Vision_System`: Python scripts for dual-camera hand tracking and coordinate mapping.
-* `/REDACTED`: Wiring diagrams and Raspberry Pi configuration.
 
 ---
 
-## 🛠️ Work in Progress
-
-This project is currently under active development. Future updates will include:
-1. Full assembly guide and Bill of Materials (BOM).
-2. Calibration scripts for the dual-camera setup.
-
----
-
-## 🏗️ DISCLAIMER
-
-This code is already working, but some calibration needs to be done to be fully operational
-
----
-
-## 📌 Current Status: v2.0.0 (Beta)
-* **Current Version:** 2.0.0-beta
-* **Last Update:** March 2026
-* **Stable Version:** None yet (Under Development)
+## 📌 Current Status: v3.0.0
+* **Current Version:** 3.0.0
+* **Last Update:** June 2026
+* **Stable Version:** 3.0.0
 
 ---
 
